@@ -9,9 +9,6 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /workspace
 
-# Copy requirements or directly install core dependencies
-COPY aerolens/aerolens_env/ /tmp/env_copy/ 2>/dev/null || true
-
 # Run install for dependencies
 RUN pip install --no-cache-dir \
     fastapi \
