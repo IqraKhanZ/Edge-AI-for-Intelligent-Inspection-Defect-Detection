@@ -27,7 +27,7 @@ COPY . .
 ENV PYTHONPATH=/workspace
 
 # Expose port
-EXPOSE 8000
+EXPOSE 7860
 
 # Start FastAPI dashboard
-CMD ["uvicorn", "aerolens.dashboard.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "aerolens.dashboard.api:app", "--host", "0.0.0.0", "--port", "7860"]
