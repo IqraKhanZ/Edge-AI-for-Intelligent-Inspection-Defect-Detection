@@ -3,22 +3,11 @@ FROM python:3.10-slim
 # Set working directory
 WORKDIR /workspace
 
-# Run install for dependencies
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    python-multipart \
-    numpy \
-    opencv-python-headless \
-    pyyaml \
-    torch \
-    torchvision \
-    ultralytics \
-    onnx \
-    onnxslim
+# Copy requirements
+COPY requirements.txt .
 
-# Force headless OpenCV by removing standard GUI package pulled by ultralytics dependency
-RUN pip uninstall -y opencv-python
+# Install production dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY . .

@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 import yaml
-from ultralytics import YOLO
+import onnxruntime as ort
 
 class EdgeDetector:
     def __init__(self, config_path=None):
@@ -22,11 +22,15 @@ class EdgeDetector:
         self.model_path = os.path.join(base_dir, "models", "optimized", "tensorrt", "model.onnx")
         
         if not os.path.exists(self.model_path):
-            print(f"[Detector] ONNX model not found at {self.model_path}. Falling back to default pt.")
-            self.model_path = "yolov8n.pt"
-            
-        print(f"[Detector] Loading model: {self.model_path}")
-        self.model = YOLO(self.model_path, task="detect")
+            print(f"[Detector] ONNX model not found at {self.model_path}.")
+            self.session = None
+        else:
+            print(f"[Detector] Loading ONNX model session: {self.model_path}")
+            opts = ort.SessionOptions()
+            opts.intra_op_num_threads = 1
+            opts.inter_op_num_threads = 1
+            self.session = ort.InferenceSession(self.model_path, sess_options=opts, providers=['CPUExecutionProvider'])
+            self.input_name = self.session.get_inputs()[0].name
 
     def detect(self, frame):
         """
@@ -35,34 +39,50 @@ class EdgeDetector:
         """
         all_detections = []
         
-        # 1. Gather Deep Learning (YOLOv8) predictions
-        try:
-            # We filter YOLOv8 with a slightly higher confidence (0.50) to suppress false positives
-            yolo_thresh = max(self.conf_threshold, 0.50)
-            results = self.model(frame, conf=yolo_thresh, verbose=False)
-            if results:
-                result = results[0]
-                boxes = result.boxes
-                for box in boxes:
-                    xyxy = box.xyxy[0].cpu().numpy()
-                    x1, y1, x2, y2 = map(int, xyxy)
-                    w = x2 - x1
-                    h = y2 - y1
-                    conf = float(box.conf[0].cpu().numpy())
-                    cls_idx = int(box.cls[0].cpu().numpy())
+        # 1. Gather Deep Learning (YOLOv8 ONNX) predictions
+        if self.session is not None:
+            try:
+                yolo_thresh = max(self.conf_threshold, 0.50)
+                # Preprocess frame to (1, 3, 640, 640) normalized float32
+                h_orig, w_orig = frame.shape[:2]
+                input_img = cv2.resize(frame, (640, 640))
+                input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
+                input_img = input_img.transpose(2, 0, 1).astype(np.float32) / 255.0
+                input_tensor = np.expand_dims(input_img, axis=0)
+                
+                # Run ONNX inference
+                outputs = self.session.run(None, {self.input_name: input_tensor})
+                output = outputs[0][0] # (8, 8400)
+                
+                # Parse detections: shape (8, 8400) -> xc, yc, w, h, class_0, class_1, class_2, class_3
+                boxes = output[:4, :].T # (8400, 4)
+                scores = output[4:, :].T # (8400, 4)
+                
+                class_ids = np.argmax(scores, axis=1)
+                confidences = np.max(scores, axis=1)
+                
+                mask = confidences >= yolo_thresh
+                boxes = boxes[mask]
+                class_ids = class_ids[mask]
+                confidences = confidences[mask]
+                
+                for i in range(len(boxes)):
+                    xc, yc, w, h = boxes[i]
+                    x1 = xc - w / 2
+                    y1 = yc - h / 2
                     
-                    if 0 <= cls_idx < len(self.classes):
-                        class_name = self.classes[cls_idx]
-                    else:
-                        class_name = "unknown"
-                        
+                    rx = int(x1 * w_orig / 640)
+                    ry = int(y1 * h_orig / 640)
+                    rw = int(w * w_orig / 640)
+                    rh = int(h * h_orig / 640)
+                    
                     all_detections.append({
-                        "box": [x1, y1, w, h],
-                        "class": class_name,
-                        "confidence": float(round(conf, 2))
+                        "box": [rx, ry, rw, rh],
+                        "class": self.classes[class_ids[i]],
+                        "confidence": float(round(confidences[i], 2))
                     })
-        except Exception as e:
-            print(f"[Detector] YOLO inference failed: {e}")
+            except Exception as e:
+                print(f"[Detector] YOLO ONNX inference failed: {e}")
             
         # 2. Gather OpenCV Heuristic predictions
         try:
