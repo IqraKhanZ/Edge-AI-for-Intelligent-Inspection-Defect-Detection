@@ -17,6 +17,9 @@ RUN pip install --no-cache-dir \
     onnx \
     onnxslim
 
+# Force headless OpenCV by removing standard GUI package pulled by ultralytics dependency
+RUN pip uninstall -y opencv-python
+
 # Copy source code
 COPY . .
 
