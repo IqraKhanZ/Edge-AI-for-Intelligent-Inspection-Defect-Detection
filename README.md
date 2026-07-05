@@ -189,8 +189,3 @@ aerolens/
 
 ---
 
-## 👩‍💻 Author
-
-**Iqra Khan** — Edge AI & Computer Vision Engineer
-
-GitHub: [IqraKhanZ](https://github.com/IqraKhanZ)
