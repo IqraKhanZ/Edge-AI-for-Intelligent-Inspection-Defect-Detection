@@ -128,6 +128,27 @@ def generate_report(aircraft_id: str = Form("AERO-DEV-01")):
                 <td>{img_html}</td>
             </tr>
             """
+        anomalies_html = f"<p>No defect records found for Aircraft ID {aircraft_id}.</p>"
+        if rows_html:
+            anomalies_html = f"""
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Timestamp</th>
+                        <th>Zone Location</th>
+                        <th>Defect Class</th>
+                        <th>Confidence</th>
+                        <th>Severity Score</th>
+                        <th>Urgency Band</th>
+                        <th>Annotated Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows_html}
+                </tbody>
+            </table>
+            """
             
         summary_html = f"""
         <html>
@@ -166,25 +187,7 @@ def generate_report(aircraft_id: str = Form("AERO-DEV-01")):
             <div class="summary-card card-green">Monitor Only: {counts['MONITOR']}</div>
  
             <h2>Detected Surface Anomalies</h2>
-            {f"<p>No defect records found for Aircraft ID {aircraft_id}.</p>" if not rows_html else f"""
-            <table class="records-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Timestamp</th>
-                        <th>Zone Location</th>
-                        <th>Defect Class</th>
-                        <th>Confidence</th>
-                        <th>Severity Score</th>
-                        <th>Urgency Band</th>
-                        <th>Annotated Image</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows_html}
-                </tbody>
-            </table>
-            """}
+            {anomalies_html}
             
             <p style="margin-top: 50px; font-size: 11px; color: #718096; border-top: 1px solid #e2e8f0; padding-top: 10px;">
                 CONFIDENTIAL — Aerospace MRO Proprietary Record. Generated fully on-device via AeroLens Sentinel Edge Triangulation System.
