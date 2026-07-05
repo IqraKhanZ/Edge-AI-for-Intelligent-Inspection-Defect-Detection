@@ -1,0 +1,24 @@
+# Virtual environment
+aerolens_env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local databases and logs
+*.db
+*.log
+telemetry/inspection_log.db
+
+# Generated data/outputs
+aerolens/data/raw/
+aerolens/data/annotated/
+aerolens/data/annotated_output/
+*.jpg
+*.png
+
+# Models and optimized binaries
+aerolens/models/*.onnx
+aerolens/models/*.xml
+aerolens/models/*.bin
+aerolens/models/optimized/

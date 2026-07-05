@@ -1,0 +1,17 @@
+# AeroLens Sentinel configuration parameters
+target_hardware: "jetson"  # Options: jetson, rpi, cpu
+model:
+  input_resolution: [640, 640]
+  confidence_threshold: 0.45
+  iou_threshold: 0.50
+
+severity_weights:
+  crack: 0.90
+  corrosion: 0.75
+  dent: 0.55
+  paint_peel: 0.35
+
+# Urgency Band Thresholds
+urgency_thresholds:
+  immediate_ground: 0.75
+  scheduled_repair: 0.40

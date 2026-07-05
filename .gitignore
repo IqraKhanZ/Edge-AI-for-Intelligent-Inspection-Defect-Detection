@@ -1,0 +1,36 @@
+# Virtual environment
+aerolens/aerolens_env/
+aerolens_env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local databases and logs
+*.db
+*.log
+aerolens/telemetry/inspection_log.db
+aerolens/telemetry/hardware_check.log
+
+# Generated data/outputs
+aerolens/data/raw/
+aerolens/data/annotated/
+aerolens/data/annotated_output/
+data/annotated_output/
+*.jpg
+*.png
+
+# Models and optimized binaries (keep model.onnx if desired, but standard is to exclude large weight checkpoints)
+aerolens/models/*.onnx
+aerolens/models/*.xml
+aerolens/models/*.bin
+aerolens/models/optimized/
+aerolens/models/runs/
+*.pt
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+.pytest_cache/
+aerolens/.pytest_cache/

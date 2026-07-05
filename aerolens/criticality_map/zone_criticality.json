@@ -1,0 +1,7 @@
+{
+  "wing_spar": 1.00,
+  "engine_nacelle": 0.85,
+  "control_surface_hinge": 0.80,
+  "fuselage_skin_panel": 0.60,
+  "non_structural_fairing": 0.15
+}

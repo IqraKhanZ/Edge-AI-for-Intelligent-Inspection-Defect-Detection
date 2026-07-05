@@ -1,0 +1,9 @@
+data/annotated/paint_peel_009.jpg
+data/annotated/corrosion_013.jpg
+data/annotated/corrosion_017.jpg
+data/annotated/crack_008.jpg
+data/annotated/crack_011.jpg
+data/annotated/crack_015.jpg
+data/annotated/corrosion_003.jpg
+data/annotated/corrosion_014.jpg
+data/annotated/synthetic_dent_001.jpg

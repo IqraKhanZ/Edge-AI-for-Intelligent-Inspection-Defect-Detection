@@ -1,0 +1,9 @@
+names:
+  0: crack
+  1: corrosion
+  2: dent
+  3: paint_peel
+path: C:/Users/iqraf/Downloads/Edge AI for Intelligent Inspection & Defect Detection/aerolens/data
+test: test.txt
+train: train.txt
+val: val.txt

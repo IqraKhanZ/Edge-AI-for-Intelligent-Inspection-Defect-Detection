@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-07-04 23:31:22",
+  "hardware_configs": {
+    "jetson_orin_nano": {
+      "accelerator": "TensorRT FP16 GPU",
+      "avg_latency_ms": 32.5,
+      "p95_latency_ms": 38.2,
+      "throughput_fps": 30.7,
+      "peak_memory_mb": 420,
+      "passes_completed": 100
+    },
+    "raspberry_pi_5": {
+      "accelerator": "OpenVINO CPU Fallback",
+      "avg_latency_ms": 115.4,
+      "p95_latency_ms": 135.0,
+      "throughput_fps": 8.6,
+      "peak_memory_mb": 280,
+      "passes_completed": 100
+    }
+  }
+}

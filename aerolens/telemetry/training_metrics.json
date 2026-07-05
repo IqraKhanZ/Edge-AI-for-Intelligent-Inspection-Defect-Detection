@@ -1,0 +1,32 @@
+{
+  "mAP_0.5": 0.812,
+  "mAP_0.5_0.95": 0.548,
+  "epochs": 100,
+  "batch_size": 16,
+  "class_metrics": [
+    {
+      "class": "crack",
+      "precision": 0.85,
+      "recall": 0.79,
+      "map_0.5": 0.82
+    },
+    {
+      "class": "corrosion",
+      "precision": 0.78,
+      "recall": 0.81,
+      "map_0.5": 0.8
+    },
+    {
+      "class": "dent",
+      "precision": 0.82,
+      "recall": 0.76,
+      "map_0.5": 0.79
+    },
+    {
+      "class": "paint_peel",
+      "precision": 0.76,
+      "recall": 0.83,
+      "map_0.5": 0.83
+    }
+  ]
+}
